@@ -9,24 +9,6 @@
       "outputs": [
         "dist/**"
       ]
-    },
-    "api#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "env": [],
-      "outputs": [
-        "dist/**"
-      ]
-    },
-    "native#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "env": [],
-      "outputs": [
-        "dist/**"
-      ]
     }
   },
   "globalEnv": [],
