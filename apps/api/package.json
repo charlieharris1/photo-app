@@ -7,8 +7,7 @@
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
     "lint": "eslint src/",
-    "clean": "rm -rf dist",
-    "vercel-build": "tsc"
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "cors": "^2.8.5",
