@@ -17,7 +17,7 @@ app.get('/health', (req, res) => {
 
 // Example route
 app.get('/api', (req, res) => {
-  res.json({ message: 'Welcome to the API!' })
+  res.json({ message: 'Welcome to the API' })
 })
 
 // Export the Express app
