@@ -11,6 +11,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo/metro-runtime": "~4.0.0",
     "@repo/ui": "*",
     "expo": "^52.0.23",
     "expo-status-bar": "~2.0.0",
