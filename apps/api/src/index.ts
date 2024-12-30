@@ -2,8 +2,8 @@ import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
 
+// Create Express app
 const app = express()
-const port = process.env.PORT || 3001
 
 // Middleware
 app.use(cors())
@@ -20,7 +20,6 @@ app.get('/api', (req, res) => {
   res.json({ message: 'Welcome to the API' })
 })
 
-app.listen(port, () => {
-  console.log(`API server listening on port ${port}`)
-})
+// Export the Express app
+export default app
 
