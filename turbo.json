@@ -4,8 +4,11 @@
   "tasks": {
     "build": {
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["dist/**"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", ".vercel/**"],
       "dependsOn": ["^build"]
+    },
+    "api#build": {
+      "outputs": ["dist/**", ".vercel/**"]
     },
     "dev": {
       "cache": false,
