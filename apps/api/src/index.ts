@@ -20,6 +20,11 @@ app.get('/api', (req, res) => {
   res.json({ message: 'Welcome to the API!!' })
 })
 
+app.get('/user/:userId', (req, res) => {
+  const userId = req.params.userId
+  return res.json({ userId })
+})
+
 // Export the Express app
 export default app
 
