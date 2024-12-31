@@ -1,7 +1,5 @@
 {
-  "buildCommand": "expo export -p web",
-  "outputDirectory": "public",
-  "devCommand": "expo",
+  "buildCommand": "turbo run build --filter=./apps/native",
   "cleanUrls": true,
   "framework": null,
   "rewrites": [
