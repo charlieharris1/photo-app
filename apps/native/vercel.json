@@ -1,5 +1,5 @@
 {
-  "buildCommand": "turbo run build --filter=./apps/native",
+  "buildCommand": "turbo run build --filter=apps/native",
   "cleanUrls": true,
   "framework": null,
   "rewrites": [
