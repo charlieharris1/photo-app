@@ -1,5 +1,5 @@
 {
-  "buildCommand": "turbo run build",
+  "buildCommand": "vercel env pull .env && turbo run build",
   "cleanUrls": true,
   "framework": null,
   "rewrites": [
