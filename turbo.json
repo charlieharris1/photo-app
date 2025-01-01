@@ -17,6 +17,16 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "native#build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "env": [
+        "EXPO_PUBLIC_API_URL",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY",
+        "EXPO_PUBLIC_SUPABASE_URL"
+      ]
     }
   },
   "globalEnv": [],
