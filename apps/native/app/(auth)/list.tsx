@@ -1,4 +1,10 @@
-import { View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Platform,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
@@ -8,6 +14,15 @@ import { decode } from "base64-arraybuffer";
 import { supabase } from "../../config/initSupabase";
 import { FileObject } from "@supabase/storage-js";
 import ImageItem from "../../components/ImageItem";
+
+const blobToBase64 = (blob: Blob): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result!.toString().split(",")[1]);
+    reader.onerror = (error) => reject(error);
+    reader.readAsDataURL(blob);
+  });
+};
 
 const list = () => {
   const { user } = useAuth();
@@ -37,9 +52,20 @@ const list = () => {
     // Save image if not cancelled
     if (!result.canceled) {
       const img = result.assets[0];
-      const base64 = await FileSystem.readAsStringAsync(img.uri, {
-        encoding: "base64",
-      });
+
+      let base64;
+      if (Platform.OS === "web") {
+        // Web-specific handling
+        const response = await fetch(img.uri);
+        const blob = await response.blob();
+        base64 = await blobToBase64(blob);
+      } else {
+        // Mobile-specific handling
+        base64 = await FileSystem.readAsStringAsync(img.uri, {
+          encoding: "base64",
+        });
+      }
+
       const filePath = `${user!.id}/${new Date().getTime()}.${img.type === "image" ? "png" : "mp4"}`;
       const contentType = img.type === "image" ? "image/png" : "video/mp4";
       await supabase.storage
