@@ -3,6 +3,7 @@ import { Image, View, Text, TouchableOpacity } from "react-native";
 import { supabase } from "../config/initSupabase";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { useAuth } from "../provider/AuthProvider";
 
 // Image item component that displays the image from Supabase Storage and a delte button
 const ImageItem = ({
@@ -14,7 +15,25 @@ const ImageItem = ({
   userId: string;
   onRemoveImage: () => void;
 }) => {
+  const { session } = useAuth();
   const [image, setImage] = useState<string>("");
+
+  console.log("Session: ", session);
+
+  const onPrint = async () => {
+    // Make a request to the server with the access token and image ID.
+    const response = await fetch(
+      `http://localhost:3000/print?imageId=${item.id}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${session?.access_token}`,
+        },
+      }
+    );
+
+    console.log("Print response: ", response);
+  };
 
   supabase.storage
     .from("files")
@@ -40,6 +59,9 @@ const ImageItem = ({
       {/* Delete image button */}
       <TouchableOpacity onPress={onRemoveImage}>
         <Ionicons name="trash-outline" size={20} color={"#fff"} />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={onPrint}>
+        <Ionicons name="print-outline" size={20} color={"#fff"} />
       </TouchableOpacity>
     </View>
   );
