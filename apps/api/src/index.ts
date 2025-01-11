@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
@@ -27,8 +28,8 @@ app.get('/user/:userId', (req, res) => {
 })
 
 const supabaseClient = createClient(
-  'https://kemizktqnypwjxexthcu.supabase.co',
-  "abc"
+  process.env.SUPABASE_URL as string,
+  process.env.SUPABASE_SERVICE_ROLE_SECRET_KEY as string
 )
 
 function removeBearerPrefix(token: string) {
