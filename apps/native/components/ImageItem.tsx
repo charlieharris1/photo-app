@@ -17,8 +17,7 @@ const ImageItem = ({
 }) => {
   const { session } = useAuth();
   const [image, setImage] = useState<string>("");
-
-  console.log("Session: ", session);
+  const [printed, setPrinted] = useState<boolean>(false);
 
   const onPrint = async () => {
     // Make a request to the server with the access token and image ID.
@@ -32,7 +31,9 @@ const ImageItem = ({
       }
     );
 
-    console.log("Print response: ", response);
+    if (response.ok) {
+      setPrinted(true);
+    }
   };
 
   supabase.storage
@@ -61,7 +62,11 @@ const ImageItem = ({
         <Ionicons name="trash-outline" size={20} color={"#fff"} />
       </TouchableOpacity>
       <TouchableOpacity onPress={onPrint}>
-        <Ionicons name="print-outline" size={20} color={"#fff"} />
+        <Ionicons
+          name="print-outline"
+          size={20}
+          color={printed ? "#42f58d" : "#fff"}
+        />
       </TouchableOpacity>
     </View>
   );
