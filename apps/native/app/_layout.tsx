@@ -16,7 +16,7 @@ const InitialLayout = () => {
 
     if (session && !inAuthGroup) {
       // Redirect authenticated users to the list page
-      router.replace("/list");
+      router.replace("/photos");
     } else if (!session) {
       // Redirect unauthenticated users to the login page
       router.replace("/");

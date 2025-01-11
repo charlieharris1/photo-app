@@ -94,7 +94,6 @@ const list = () => {
           />
         ))}
       </ScrollView>
-      {/* FAB to add images */}
       <TouchableOpacity onPress={onSelectImage} style={styles.fab}>
         <Ionicons name="camera-outline" size={30} color={"#fff"} />
       </TouchableOpacity>

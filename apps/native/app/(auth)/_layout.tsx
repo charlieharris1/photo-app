@@ -1,34 +1,49 @@
-import { Stack } from "expo-router";
-import { useAuth } from "../../provider/AuthProvider";
+import { Tabs } from "expo-router";
 import React from "react";
-import { TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-// Simple stack layout within the authenticated area
 const StackLayout = () => {
-  const { signOut } = useAuth();
-
   return (
-    <Stack
+    <Tabs
       screenOptions={{
+        tabBarActiveTintColor: "#ffd33d",
         headerStyle: {
-          backgroundColor: "#0f0f0f",
+          backgroundColor: "#25292e",
         },
+        headerShadowVisible: false,
         headerTintColor: "#fff",
+        tabBarStyle: {
+          backgroundColor: "#25292e",
+        },
       }}
     >
-      <Stack.Screen
-        name="list"
+      <Tabs.Screen
+        name="photos"
         options={{
-          headerTitle: "My Files",
-          headerRight: () => (
-            <TouchableOpacity onPress={signOut}>
-              <Ionicons name="log-out-outline" size={30} color={"#fff"} />
-            </TouchableOpacity>
+          title: "Photos",
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? "image-outline" : "image-outline"}
+              color={color}
+              size={24}
+            />
           ),
         }}
-      ></Stack.Screen>
-    </Stack>
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? "person-outline" : "person-outline"}
+              color={color}
+              size={24}
+            />
+          ),
+        }}
+      />
+    </Tabs>
   );
 };
 
