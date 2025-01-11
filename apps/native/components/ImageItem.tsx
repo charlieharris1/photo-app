@@ -22,7 +22,7 @@ const ImageItem = ({
   const onPrint = async () => {
     // Make a request to the server with the access token and image ID.
     const response = await fetch(
-      `http://localhost:3000/print?imageId=${item.id}`,
+      `${process.env.EXPO_PUBLIC_API_URL}/print?imageId=${item.id}`,
       {
         method: "POST",
         headers: {
