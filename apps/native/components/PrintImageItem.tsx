@@ -6,7 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../provider/AuthProvider";
 
 // Image item component that displays the image from Supabase Storage and a delte button
-const ImageItem = ({
+const PrintImageItem = ({
   item,
   userId,
   onRemoveImage,
@@ -15,7 +15,26 @@ const ImageItem = ({
   userId: string;
   onRemoveImage: () => void;
 }) => {
+  const { session } = useAuth();
   const [image, setImage] = useState<string>("");
+  const [printed, setPrinted] = useState<boolean>(false);
+
+  const onPrint = async () => {
+    // Make a request to the server with the access token and image ID.
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/print?imageId=${item.id}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${session?.access_token}`,
+        },
+      }
+    );
+
+    if (response.ok) {
+      setPrinted(true);
+    }
+  };
 
   supabase.storage
     .from("files")
@@ -42,8 +61,15 @@ const ImageItem = ({
       <TouchableOpacity onPress={onRemoveImage}>
         <Ionicons name="trash-outline" size={20} color={"#fff"} />
       </TouchableOpacity>
+      <TouchableOpacity onPress={onPrint}>
+        <Ionicons
+          name="print-outline"
+          size={20}
+          color={printed ? "#42f58d" : "#fff"}
+        />
+      </TouchableOpacity>
     </View>
   );
 };
 
-export default ImageItem;
+export default PrintImageItem;

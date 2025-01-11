@@ -16,7 +16,7 @@ export default function ProfileScreen() {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleSignOut}>
-        <Ionicons name="log-out-outline" size={30} color={"#fff"} />{" "}
+        <Ionicons name="log-out-outline" size={30} color={"#fff"} />
       </TouchableOpacity>
     </View>
   );
@@ -25,9 +25,8 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#25292e",
-    justifyContent: "center",
-    alignItems: "center",
+    padding: 20,
+    backgroundColor: "#151515",
   },
   text: {
     color: "#fff",

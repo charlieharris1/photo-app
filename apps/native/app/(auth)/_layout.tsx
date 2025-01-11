@@ -18,6 +18,32 @@ const StackLayout = () => {
       }}
     >
       <Tabs.Screen
+        name="print"
+        options={{
+          title: "Print",
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? "print-outline" : "print-outline"}
+              color={color}
+              size={24}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="deliveries"
+        options={{
+          title: "Deliveries",
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? "mail-outline" : "mail-outline"}
+              color={color}
+              size={24}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="photos"
         options={{
           title: "Photos",
