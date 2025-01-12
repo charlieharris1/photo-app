@@ -82,9 +82,13 @@ const print = () => {
     setFiles(newFiles);
   };
 
+  const onPrint = async () => {
+    console.log("Print");
+  };
+
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView style={styles.photosContainer}>
         {files.map((item, index) => (
           <PrintImageItem
             key={item.id}
@@ -94,9 +98,16 @@ const print = () => {
           />
         ))}
       </ScrollView>
-      <TouchableOpacity onPress={onSelectImage} style={styles.fab}>
-        <Ionicons name="camera-outline" size={30} color={"#fff"} />
-      </TouchableOpacity>
+      <View style={styles.buttonsContainer}>
+        <View style={styles.buttons}>
+          <TouchableOpacity onPress={onSelectImage} style={styles.button}>
+            <Ionicons name="camera-outline" size={30} color={"#fff"} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onPrint} style={styles.button}>
+            <Ionicons name="print-outline" size={30} color={"#fff"} />
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 };
@@ -104,17 +115,27 @@ const print = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: "#151515",
   },
-  fab: {
+  photosContainer: {
+    padding: 20,
+  },
+  buttonsContainer: {
+    flex: 1,
+    bottom: 40,
+    position: "absolute",
+    width: "100%",
+  },
+  buttons: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    columnGap: 20,
+  },
+  button: {
     borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
     width: 70,
-    position: "absolute",
-    bottom: 40,
-    right: 30,
     height: 70,
     backgroundColor: "#2b825b",
     borderRadius: 100,
