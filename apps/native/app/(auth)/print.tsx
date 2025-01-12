@@ -25,7 +25,7 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
 };
 
 const print = () => {
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const [files, setFiles] = useState<FileObject[]>([]);
 
   useEffect(() => {
@@ -41,6 +41,24 @@ const print = () => {
       setFiles(data);
     }
   };
+
+  const addFileToCurrentPrint = async (filePath: string) => {
+    // TODO: Handle errors.
+    await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/current-print-batch/files`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session!.access_token}`,
+        },
+        body: JSON.stringify({
+          files: [{ filePath }],
+        }),
+      }
+    );
+  };
+
   const onSelectImage = async () => {
     const options: ImagePicker.ImagePickerOptions = {
       mediaTypes: ["images"],
@@ -66,13 +84,14 @@ const print = () => {
         });
       }
 
+      // TODO: No point handling videos here. May also need to support things other than pngs?
       const filePath = `${user!.id}/${new Date().getTime()}.${img.type === "image" ? "png" : "mp4"}`;
       const contentType = img.type === "image" ? "image/png" : "video/mp4";
       await supabase.storage
         .from("files")
         .upload(filePath, decode(base64), { contentType });
 
-      // Make an API call to set this as part of the current print job? Maybe a table called "current_print_batch". 
+      await addFileToCurrentPrint(filePath);
       loadImages();
     }
   };

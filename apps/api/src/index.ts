@@ -2,7 +2,7 @@ import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
-const { createClient } = require('@supabase/supabase-js');
+import { createClient } from '@supabase/supabase-js';
 
 // Create Express app
 const app = express()
@@ -36,16 +36,28 @@ function removeBearerPrefix(token: string) {
   return token.split(" ").pop(); // Split the string by spaces and get the last part
 }
 
-app.post('/print', async (req, res) => {
-  console.log('Authorization => ', req.headers.authorization)
+app.post('/current-print-batch/files', async (req, res) => {
+  const { files } = req.body
   const token = removeBearerPrefix(req.headers.authorization as string)
   const user = await supabaseClient.auth.getUser(token)
-  console.log('User: ', user)
-  const imageId = req.query.imageId
-  return res.json({ imageId })
+  const userId = user?.data?.user?.id
+
+  if (userId) {
+    // TODO: Add validation here.
+    const now = new Date().toISOString(); // Current timestamp
+    await supabaseClient.from('current_print_batch').insert(files.map((file: { filePath: string}) => ({
+      user_id: userId,
+      file_path: file.filePath,
+      created_at: now,
+      last_updated_at: now
+    })))
+
+    // TODO: Handle error inserting.
+  }
+
+  return res.sendStatus(204)
 })
 
 
-// Export the Express app
 export default app
 
