@@ -36,6 +36,7 @@ function removeBearerPrefix(token: string) {
   return token.split(" ").pop(); // Split the string by spaces and get the last part
 }
 
+// TODO: RLS?
 app.post('/current-print-batch/files', async (req, res) => {
   const { files } = req.body
   const token = removeBearerPrefix(req.headers.authorization as string)

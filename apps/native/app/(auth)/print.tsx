@@ -84,9 +84,10 @@ const print = () => {
         });
       }
 
-      // TODO: No point handling videos here. May also need to support things other than pngs?
-      const filePath = `${user!.id}/${new Date().getTime()}.${img.type === "image" ? "png" : "mp4"}`;
-      const contentType = img.type === "image" ? "image/png" : "video/mp4";
+      const extension = img.mimeType?.split("/")[1];
+      const filePath = `${user!.id}/${new Date().getTime()}.${extension}`;
+      const contentType = img.mimeType;
+
       await supabase.storage
         .from("files")
         .upload(filePath, decode(base64), { contentType });
