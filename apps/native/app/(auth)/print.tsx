@@ -71,6 +71,8 @@ const print = () => {
       await supabase.storage
         .from("files")
         .upload(filePath, decode(base64), { contentType });
+
+      // Make an API call to set this as part of the current print job? Maybe a table called "current_print_batch". 
       loadImages();
     }
   };
