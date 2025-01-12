@@ -59,6 +59,37 @@ app.post('/current-print-batch/files', async (req, res) => {
   return res.sendStatus(204)
 })
 
+app.delete('/current-print-batch/files', async (req, res) => {
+  const { filePaths } = req.body
+  const token = removeBearerPrefix(req.headers.authorization as string)
+  const user = await supabaseClient.auth.getUser(token)
+  const userId = user?.data?.user?.id
+
+  if (userId) {
+    await supabaseClient.from('current_print_batch').delete().eq('user_id', userId).in('file_path', filePaths)
+    await supabaseClient.storage.from("files").remove(filePaths);
+    const { data } = await supabaseClient.from('current_print_batch').select('file_path').eq('user_id', userId)
+    return res.json(data)
+  }
+})
+
+app.get('/current-print-batch/files', async (req, res) => {
+  const token = removeBearerPrefix(req.headers.authorization as string)
+  const user = await supabaseClient.auth.getUser(token)
+  const userId = user?.data?.user?.id
+
+  if (userId) {
+    const { data, error } = await supabaseClient.from('current_print_batch').select('file_path').eq('user_id', userId)
+
+    if (error) {
+      return res.status(500).json({ error: error.message })
+    }
+
+    return res.json(data)
+  }
+
+  return res.sendStatus(401)
+})
 
 export default app
 

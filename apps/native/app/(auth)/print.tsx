@@ -12,7 +12,6 @@ import { useAuth } from "../../provider/AuthProvider";
 import * as FileSystem from "expo-file-system";
 import { decode } from "base64-arraybuffer";
 import { supabase } from "../../config/initSupabase";
-import { FileObject } from "@supabase/storage-js";
 import PrintImageItem from "../../components/PrintImageItem";
 
 const blobToBase64 = (blob: Blob): Promise<string> => {
@@ -26,7 +25,7 @@ const blobToBase64 = (blob: Blob): Promise<string> => {
 
 const print = () => {
   const { user, session } = useAuth();
-  const [files, setFiles] = useState<FileObject[]>([]);
+  const [files, setFiles] = useState<string[]>([]);
 
   useEffect(() => {
     if (!user) return;
@@ -36,9 +35,24 @@ const print = () => {
   }, [user]);
 
   const loadImages = async () => {
-    const { data } = await supabase.storage.from("files").list(user!.id);
-    if (data) {
-      setFiles(data);
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/current-print-batch/files`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${session!.access_token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const files = await response.json();
+    const filePaths = files.map(
+      (file: { file_path: string }) => file.file_path
+    );
+
+    if (filePaths) {
+      setFiles(filePaths);
     }
   };
 
@@ -93,15 +107,33 @@ const print = () => {
         .upload(filePath, decode(base64), { contentType });
 
       await addFileToCurrentPrint(filePath);
+
       loadImages();
     }
   };
 
-  const onRemoveImage = async (item: FileObject, listIndex: number) => {
-    supabase.storage.from("files").remove([`${user!.id}/${item.name}`]);
-    const newFiles = [...files];
-    newFiles.splice(listIndex, 1);
-    setFiles(newFiles);
+  const onRemoveImage = async (item: string, listIndex: number) => {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/current-print-batch/files`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session!.access_token}`,
+        },
+        body: JSON.stringify({
+          filePaths: [item],
+        }),
+      }
+    );
+
+    const files = await response.json();
+
+    const filePaths = files.map(
+      (file: { file_path: string }) => file.file_path
+    );
+
+    setFiles(filePaths ?? []);
   };
 
   const onPrint = async () => {
@@ -113,8 +145,8 @@ const print = () => {
       <ScrollView style={styles.photosContainer}>
         {files.map((item, index) => (
           <PrintImageItem
-            key={item.id}
-            item={item}
+            key={item}
+            filePath={item}
             userId={user!.id}
             onRemoveImage={() => onRemoveImage(item, index)}
           />
